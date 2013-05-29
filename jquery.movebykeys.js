@@ -3,6 +3,8 @@
  * @version: 0.7.1
  * @since: 28.05.2013
  *
+ * @repository: https://github.com/rhermann/moveByKeys
+ *
  * Macht HTML-Element mit den Pfeiltasten der Tastatur verschiebbar,
  * Voraussetzung: die Elemente sind per position: absolute|relative über top und left beeinflussbar.
  * Features: Schrittweiten in X- und Y-Achse einstellbar
