@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Move HTML-Elements with arrow-keys</title>
+    <script src="jquery.min.js"></script>
+    <script src="jquery.movebykeys.js"></script>
+</head>
+<body>
+
+<style>
+    html, body {
+        width: 100%;
+        height: 2000px;
+        margin: 0;
+        padding: 0;
+    }
+
+    #rahmen {
+        position: relative;
+        left: 250px;
+        top: 50px;
+        width: 500px;
+        height: 500px;
+        border: 5px dashed yellow;
+        padding: 10px;
+        background: lightcoral;
+        margin: 10px;
+    }
+
+    .box, .box2 {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        top: 100px;
+        left: 30px;
+        border: 2px solid blue;
+        background: cornflowerblue;
+    }
+
+    .box2 {
+        background: greenyellow;
+        top: 300px;
+        left: 300px;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        //Init
+
+        $('.box').moveByKeys({
+            containment: $('#rahmen'),
+            containmentMode: 'content',
+            stepY: 14,
+            stepX: 24,
+            preventScrolling: true
+        });
+        $('.box2').moveByKeys({
+            step: 10
+        });
+
+        $('#active').on('click', function () {
+            $('.box').moveByKeys();
+        });
+        $('#destroy').on('click', function () {
+            $('.box').moveByKeys('destroy');
+        });
+    });
+</script>
+
+<div id="rahmen">
+    <div class="box"></div>
+</div>
+<div class="box2"></div>
+
+<button id="active">active</button>
+<button id="destroy">destroy</button>
+
+</body>
+</html>
