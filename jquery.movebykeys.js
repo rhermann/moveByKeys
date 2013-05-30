@@ -1,6 +1,6 @@
 /*
  * @author: Robert Hermann
- * @version: 0.7.1
+ * @version: 0.7.2
  * @since: 28.05.2013
  *
  * @repository: https://github.com/rhermann/moveByKeys
@@ -10,6 +10,8 @@
  * Features: Schrittweiten in X- und Y-Achse einstellbar
  * Begrenzung durch einen Elterncontainer (Angabe als jQuery Objekt), Verhalten der Grenzen als
  * Modi content (Innen), padding (Innen + Innenabstand), border (einschließlich border).
+ * @changed: 0.7.2: keypress statt keydown, ist robuster
+ * Anmerkung: ist preventScrolling: true, gilt dies für alle anderen Instanzen auch
  * TODO: Zahlenwerte als Begrenzung direkt setzbar
  * TODO: Logarithmische Beschleunigung nach gewisser Zeit von step 1 zu maxWert einstellbar
  */
@@ -38,7 +40,7 @@ $.fn.moveByKeys = function (options) {
             PLUGIN_NS: 'moveByKeys',
             arrEventhandler: [],
             EVENTS: {
-                KEYDOWN: 'keydown'
+                KEYPRESS: 'keypress'
             },
 
             init: function (options) {
@@ -78,7 +80,7 @@ $.fn.moveByKeys = function (options) {
                     /*
                      * Tastenereignisse auswerten
                      */
-                    var keydownFn = function (event) {
+                    var keyPressFn = function (event) {
 
                         var arrAllowedKeyCodes = [37, 38, 39, 40];
                         //ab IE9 Array.indexOf verfügbar (siehe: http://kangax.github.io/es5-compat-table/)
@@ -208,9 +210,9 @@ $.fn.moveByKeys = function (options) {
                     /*
                      * Tasten ermitteln
                      */
-                    $(document).on(me.EVENTS.KEYDOWN, keydownFn);
+                    $(document).on(me.EVENTS.KEYPRESS, keyPressFn);
                     //Eventhandler einsammeln, um sie bei "destroy" abbinden zu können
-                    me.arrEventhandler.push(keydownFn);
+                    me.arrEventhandler.push(keyPressFn);
 
                     //Plugin an HTML-Element hängen
                     $(self).data(me.PLUGIN_NS, me);
@@ -227,7 +229,7 @@ $.fn.moveByKeys = function (options) {
                     len = me.arrEventhandler.length,
                     i;
                 for (i = 0; i < len; i += 1) {
-                    $(document).off(me.EVENTS.KEYDOWN, me.arrEventhandler[i]);
+                    $(document).off(me.EVENTS.KEYPRESS, me.arrEventhandler[i]);
                 }
             },
             /**
