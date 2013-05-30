@@ -30,4 +30,4 @@ Examples:
             stepX: 24
         });
 
-http://jsfiddle.net/c3k3N/
+http://jsfiddle.net/c3k3N/1/
