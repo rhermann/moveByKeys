@@ -1,9 +1,7 @@
 /*
  * @author: Robert Hermann
- * @version: 0.7.2
+ * @version: 0.7.3
  * @since: 28.05.2013
- *
- * @repository: https://github.com/rhermann/moveByKeys
  *
  * Macht HTML-Element mit den Pfeiltasten der Tastatur verschiebbar,
  * Voraussetzung: die Elemente sind per position: absolute|relative über top und left beeinflussbar.
@@ -12,6 +10,7 @@
  * Modi content (Innen), padding (Innen + Innenabstand), border (einschließlich border).
  * @changed: 0.7.2: keypress statt keydown, ist robuster
  * Anmerkung: ist preventScrolling: true, gilt dies für alle anderen Instanzen auch
+ * @changed: 0.7.3: keypress Webkit don't work: https://code.google.com/p/chromium/issues/detail?id=2606, uses keydown event instead
  * TODO: Zahlenwerte als Begrenzung direkt setzbar
  * TODO: Logarithmische Beschleunigung nach gewisser Zeit von step 1 zu maxWert einstellbar
  */
@@ -40,7 +39,8 @@ $.fn.moveByKeys = function (options) {
             PLUGIN_NS: 'moveByKeys',
             arrEventhandler: [],
             EVENTS: {
-                KEYPRESS: 'keypress'
+                KEYPRESS: 'keypress',
+                KEYDOWN: 'keydown'
             },
 
             init: function (options) {
@@ -210,7 +210,8 @@ $.fn.moveByKeys = function (options) {
                     /*
                      * Tasten ermitteln
                      */
-                    $(document).on(me.EVENTS.KEYPRESS, keyPressFn);
+                    var useKeyDown = $.browser.chrome || $.browser.safari || $.browser.opera;
+                    $(document).on((!useKeyDown) ? me.EVENTS.KEYPRESS : me.EVENTS.KEYDOWN, keyPressFn);
                     //Eventhandler einsammeln, um sie bei "destroy" abbinden zu können
                     me.arrEventhandler.push(keyPressFn);
 
@@ -229,7 +230,8 @@ $.fn.moveByKeys = function (options) {
                     len = me.arrEventhandler.length,
                     i;
                 for (i = 0; i < len; i += 1) {
-                    $(document).off(me.EVENTS.KEYPRESS, me.arrEventhandler[i]);
+                    var useKeyDown = $.browser.chrome || $.browser.safari || $.browser.opera;
+                    $(document).off((!useKeyDown) ? me.EVENTS.KEYPRESS : me.EVENTS.KEYDOWN, me.arrEventhandler[i]);
                 }
             },
             /**
